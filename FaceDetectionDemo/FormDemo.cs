@@ -44,13 +44,22 @@ namespace FaceDetectionDemo
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedIndex == -1) return;
-
-            FilterInfo info = videoDevices[comboBox1.SelectedIndex];
-            VideoCaptureDevice videoCapture = new VideoCaptureDevice(info.MonikerString);
-            videoSourcePlayer1.VideoSource = videoCapture;
-            videoSourcePlayer1.Start();
-            timer1.Start();
+            if (videoSourcePlayer1.IsRunning)
+            {
+                videoSourcePlayer1.Stop();
+                timer1.Start();
+                button1.Text = "打开摄像头并识别人脸";
+            }
+            else
+            {
+                if (comboBox1.SelectedIndex == -1) return;
+                FilterInfo info = videoDevices[comboBox1.SelectedIndex];
+                VideoCaptureDevice videoCapture = new VideoCaptureDevice(info.MonikerString);
+                videoSourcePlayer1.VideoSource = videoCapture;
+                videoSourcePlayer1.Start();
+                timer1.Start();
+                button1.Text = "关闭摄像头";
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
