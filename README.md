@@ -9,6 +9,4 @@
 - 下载 [Release.zip 文件](https://github.com/View12138/ViewFaceCoreDemo/releases) ，解压并运行 `FaceDetectionDemo.exe` 。
 
 ### 效果
-> OneDrive 图床，加载失败请科学上网。  
-
-![Jay's Face](https://storage.live.com/items/5C9B5D5F87A5CA34!324242?authkey=ABvWBQm0fRdCQns)
+![Jay's Face，OneDrive 图床，加载失败请科学上网。](https://storage.live.com/items/5C9B5D5F87A5CA34!324242?authkey=ABvWBQm0fRdCQns)
