@@ -3,11 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using View.Core.Extensions;
 using ViewFaceCore.Sharp;
 
 namespace FaceDetectionDemo
@@ -17,9 +20,6 @@ namespace FaceDetectionDemo
         public FormDemo()
         {
             InitializeComponent();
-
-            TimerDetector.Interval = 1000 / 15; // 15 FPS
-            TimerDetector.Tick += TimerDetector_Tick;
 
             VideoPlayer.Visible = false; // 隐藏摄像头画面控件
         }
@@ -32,11 +32,29 @@ namespace FaceDetectionDemo
         /// 人脸位置信息集合
         /// </summary>
         List<Rectangle> FaceRectangles = new List<Rectangle>();
+        /// <summary>
+        /// 人脸对应的年龄集合
+        /// </summary>
+        List<int> Ages = new List<int>();
+        /// <summary>
+        /// 性别集合
+        /// </summary>
+        List<string> Gender = new List<string>();
 
         /// <summary>
         /// 人脸识别库
         /// </summary>
         ViewFace ViewFace = new ViewFace();
+
+        /// <summary>
+        /// 取消令牌
+        /// </summary>
+        CancellationTokenSource Token { get; set; }
+
+        /// <summary>
+        /// 指示是否应关闭窗体
+        /// </summary>
+        bool IsClose = false;
 
         /// <summary>
         /// 窗体加载时
@@ -54,6 +72,20 @@ namespace FaceDetectionDemo
             if (comboBox1.Items.Count > 0)
             { comboBox1.SelectedIndex = 0; }
         }
+        /// <summary>
+        /// 窗体关闭时，关闭摄像头
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Form_Closing(object sender, FormClosingEventArgs e)
+        {
+            Token?.Cancel();
+            if (!IsClose && VideoPlayer.IsRunning)
+            { // 若摄像头开启时，点击关闭是暂不关闭，并设置关闭窗口的标识，待摄像头等设备关闭后，再关闭窗体。
+                e.Cancel = true;
+                IsClose = true;
+            }
+        }
 
         /// <summary>
         /// 点击开始按钮时
@@ -64,9 +96,7 @@ namespace FaceDetectionDemo
         {
             if (VideoPlayer.IsRunning)
             {
-                VideoPlayer.SignalToStop();
-                VideoPlayer.WaitForStop();
-                TimerDetector.Start();
+                Token?.Cancel();
                 ButtonStart.Text = "打开摄像头并识别人脸";
             }
             else
@@ -76,50 +106,85 @@ namespace FaceDetectionDemo
                 VideoCaptureDevice videoCapture = new VideoCaptureDevice(info.MonikerString);
                 VideoPlayer.VideoSource = videoCapture;
                 VideoPlayer.Start();
-                TimerDetector.Start();
                 ButtonStart.Text = "关闭摄像头";
+                Token = new CancellationTokenSource();
+                StartDetector(Token.Token);
             }
         }
 
         /// <summary>
-        /// 每 100 ms 检测一次人脸
+        /// 持续检测一次人脸，直到停止。
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TimerDetector_Tick(object sender, EventArgs e)
+        /// <param name="token">取消标记</param>
+        private async void StartDetector(CancellationToken token)
         {
-            if (VideoPlayer.IsRunning)
+            Stopwatch stopwatch = new Stopwatch();
+            while (VideoPlayer.IsRunning && !token.IsCancellationRequested)
             {
-                Bitmap bitmap = VideoPlayer.GetCurrentVideoFrame(); // 获取摄像头画面
+                if (CheckBoxFPS.Checked)
+                { stopwatch.Restart(); }
+                Bitmap bitmap = VideoPlayer.GetCurrentVideoFrame(); // 获取摄像头画面 
                 if (bitmap != null)
                 {
-                    var infos = ViewFace.FaceDetector(bitmap); // 识别画面中的人脸
-                    FaceRectangles.Clear();
-                    foreach (var info in infos)
+                    FaceRectangles.Clear(); Ages.Clear();
+                    if (CheckBoxDetect.Checked)
                     {
-                        FaceRectangles.Add(new Rectangle(info.Location.X, info.Location.Y, info.Location.Width, info.Location.Height));
+                        var infos = await ViewFace.FaceDetectorAsync(bitmap); // 识别画面中的人脸
+                        foreach (var info in infos)
+                        {
+                            FaceRectangles.Add(info.Location);
+                            if (CheckBoxFaceProperty.Checked)
+                            {
+                                Ages.Add(await ViewFace.FaceAgePredictorAsync(bitmap, await ViewFace.FaceMarkAsync(bitmap, info)));
+                                Gender.Add((await ViewFace.FaceGenderPredictorAsync(bitmap, await ViewFace.FaceMarkAsync(bitmap, info))).ToDescription());
+                            }
+                        }
                     }
-                    if (FaceRectangles.Count > 0) // 如果有人脸，在 bitmap 上绘制出人脸的位置信息
+                    else
                     {
-                        using (Graphics g = Graphics.FromImage(bitmap))
+                        await Task.Delay(1000 / 60);
+                    }
+                    using (Graphics g = Graphics.FromImage(bitmap))
+                    {
+                        if (FaceRectangles.Any()) // 如果有人脸，在 bitmap 上绘制出人脸的位置信息
                         {
                             g.DrawRectangles(new Pen(Color.Red, 4), FaceRectangles.ToArray());
+                            if (CheckBoxDetect.Checked && CheckBoxFaceProperty.Checked)
+                            {
+                                for (int i = 0; i < FaceRectangles.Count; i++)
+                                { g.DrawString($"{Ages[i]} 岁 | {Gender[i]}", new Font("微软雅黑", 24), Brushes.Green, new PointF(FaceRectangles[i].X + FaceRectangles[i].Width + 24, FaceRectangles[i].Y)); }
+                            }
+                        }
+
+                        if (CheckBoxFPS.Checked)
+                        {
+                            stopwatch.Stop();
+                            g.DrawString($"{1000f / stopwatch.ElapsedMilliseconds:#.#} FPS", new Font("微软雅黑", 24), Brushes.Green, new Point(10, 10));
                         }
                     }
                 }
+                else
+                { await Task.Delay(10); }
+                FacePictureBox.Image?.Dispose();
                 FacePictureBox.Image = bitmap;
+            }
+
+            VideoPlayer?.SignalToStop();
+            VideoPlayer?.WaitForStop();
+            if (IsClose)
+            {
+                Close();
             }
         }
 
         /// <summary>
-        /// 窗体关闭时，关闭摄像头
+        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Form_Closing(object sender, FormClosingEventArgs e)
+        private void CheckBoxDetect_CheckedChanged(object sender, EventArgs e)
         {
-            VideoPlayer.SignalToStop();
-            VideoPlayer.WaitForStop();
+            CheckBoxFaceProperty.Enabled = CheckBoxDetect.Checked;
         }
     }
 }

@@ -73,8 +73,14 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="ViewFaceCore, Version=0.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ViewFaceCore.0.1.1\lib\netstandard2.0\ViewFaceCore.dll</HintPath>
+    <Reference Include="View.Core, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\View.Core.0.0.5\lib\netstandard2.0\View.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="View.Drawing, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\View.Drawing.0.1.4\lib\netstandard2.0\View.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="ViewFaceCore, Version=0.3.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ViewFaceCore.0.3.4\lib\netstandard2.0\ViewFaceCore.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +105,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="app.manifest" />
+    <None Include="model\age_predictor.csta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="model\face_landmarker_pts5.csta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="model\gender_predictor.csta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -114,11 +129,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\ViewFaceCore.0.1.1\build\ViewFaceCore.targets" Condition="Exists('..\packages\ViewFaceCore.0.1.1\build\ViewFaceCore.targets')" />
+  <Import Project="..\packages\ViewFaceCore.0.3.4\build\ViewFaceCore.targets" Condition="Exists('..\packages\ViewFaceCore.0.3.4\build\ViewFaceCore.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\ViewFaceCore.0.1.1\build\ViewFaceCore.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ViewFaceCore.0.1.1\build\ViewFaceCore.targets'))" />
+    <Error Condition="!Exists('..\packages\ViewFaceCore.0.3.4\build\ViewFaceCore.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ViewFaceCore.0.3.4\build\ViewFaceCore.targets'))" />
   </Target>
 </Project>

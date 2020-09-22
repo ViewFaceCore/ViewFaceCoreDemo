@@ -32,8 +32,11 @@
             this.ButtonStart = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.FacePictureBox = new System.Windows.Forms.PictureBox();
-            this.TimerDetector = new System.Windows.Forms.Timer(this.components);
             this.VideoPlayer = new AForge.Controls.VideoSourcePlayer();
+            this.CheckBoxFaceProperty = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.CheckBoxFPS = new System.Windows.Forms.CheckBox();
+            this.CheckBoxDetect = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.FacePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -79,11 +82,50 @@
             this.VideoPlayer.Text = "videoSourcePlayer1";
             this.VideoPlayer.VideoSource = null;
             // 
+            // checkBoxFaceProperty
+            // 
+            this.CheckBoxFaceProperty.AutoSize = true;
+            this.CheckBoxFaceProperty.Location = new System.Drawing.Point(752, 134);
+            this.CheckBoxFaceProperty.Name = "checkBoxFaceProperty";
+            this.CheckBoxFaceProperty.Size = new System.Drawing.Size(119, 19);
+            this.CheckBoxFaceProperty.TabIndex = 6;
+            this.CheckBoxFaceProperty.Text = "检测人脸属性";
+            this.toolTip1.SetToolTip(this.CheckBoxFaceProperty, "启用检测人脸属性后，图片的刷新率可能会显著下降");
+            this.CheckBoxFaceProperty.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxFPS
+            // 
+            this.CheckBoxFPS.AutoSize = true;
+            this.CheckBoxFPS.Checked = true;
+            this.CheckBoxFPS.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckBoxFPS.Location = new System.Drawing.Point(752, 159);
+            this.CheckBoxFPS.Name = "checkBoxFPS";
+            this.CheckBoxFPS.Size = new System.Drawing.Size(91, 19);
+            this.CheckBoxFPS.TabIndex = 7;
+            this.CheckBoxFPS.Text = "计算 FPS";
+            this.CheckBoxFPS.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxDetect
+            // 
+            this.CheckBoxDetect.AutoSize = true;
+            this.CheckBoxDetect.Checked = true;
+            this.CheckBoxDetect.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckBoxDetect.Location = new System.Drawing.Point(752, 109);
+            this.CheckBoxDetect.Name = "checkBoxDetect";
+            this.CheckBoxDetect.Size = new System.Drawing.Size(89, 19);
+            this.CheckBoxDetect.TabIndex = 8;
+            this.CheckBoxDetect.Text = "人脸检测";
+            this.CheckBoxDetect.UseVisualStyleBackColor = true;
+            this.CheckBoxDetect.CheckedChanged += new System.EventHandler(this.CheckBoxDetect_CheckedChanged);
+            // 
             // FormDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(891, 442);
+            this.Controls.Add(this.CheckBoxDetect);
+            this.Controls.Add(this.CheckBoxFPS);
+            this.Controls.Add(this.CheckBoxFaceProperty);
             this.Controls.Add(this.VideoPlayer);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.ButtonStart);
@@ -94,6 +136,7 @@
             this.Load += new System.EventHandler(this.Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.FacePictureBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -101,8 +144,11 @@
         private System.Windows.Forms.Button ButtonStart;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.PictureBox FacePictureBox;
-        private System.Windows.Forms.Timer TimerDetector;
         private AForge.Controls.VideoSourcePlayer VideoPlayer;
+        private System.Windows.Forms.CheckBox CheckBoxFaceProperty;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.CheckBox CheckBoxFPS;
+        private System.Windows.Forms.CheckBox CheckBoxDetect;
     }
 }
 
