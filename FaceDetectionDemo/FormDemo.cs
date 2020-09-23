@@ -33,6 +33,10 @@ namespace FaceDetectionDemo
         /// </summary>
         List<Rectangle> FaceRectangles = new List<Rectangle>();
         /// <summary>
+        /// 人脸 Pid 集合
+        /// </summary>
+        List<int> Pids = new List<int>();
+        /// <summary>
         /// 人脸对应的年龄集合
         /// </summary>
         List<int> Ages = new List<int>();
@@ -126,17 +130,18 @@ namespace FaceDetectionDemo
                 Bitmap bitmap = VideoPlayer.GetCurrentVideoFrame(); // 获取摄像头画面 
                 if (bitmap != null)
                 {
-                    FaceRectangles.Clear(); Ages.Clear();
+                    FaceRectangles.Clear(); Ages.Clear(); Pids.Clear();
                     if (CheckBoxDetect.Checked)
                     {
-                        var infos = await ViewFace.FaceDetectorAsync(bitmap); // 识别画面中的人脸
+                        var infos = await ViewFace.FaceTrackAsync(bitmap); // 识别画面中的人脸
                         foreach (var info in infos)
                         {
                             FaceRectangles.Add(info.Location);
+                            Pids.Add(info.Pid);
                             if (CheckBoxFaceProperty.Checked)
                             {
-                                Ages.Add(await ViewFace.FaceAgePredictorAsync(bitmap, await ViewFace.FaceMarkAsync(bitmap, info)));
-                                Gender.Add((await ViewFace.FaceGenderPredictorAsync(bitmap, await ViewFace.FaceMarkAsync(bitmap, info))).ToDescription());
+                                Ages.Add(await ViewFace.FaceAgePredictorAsync(bitmap, await ViewFace.FaceMarkAsync(bitmap, new ViewFaceCore.Sharp.Model.FaceInfo() { Location = info.Location, Score = info.Score })));
+                                Gender.Add((await ViewFace.FaceGenderPredictorAsync(bitmap, await ViewFace.FaceMarkAsync(bitmap, new ViewFaceCore.Sharp.Model.FaceInfo() { Location = info.Location, Score = info.Score }))).ToDescription());
                             }
                         }
                     }
@@ -151,8 +156,13 @@ namespace FaceDetectionDemo
                             g.DrawRectangles(new Pen(Color.Red, 4), FaceRectangles.ToArray());
                             if (CheckBoxDetect.Checked && CheckBoxFaceProperty.Checked)
                             {
+                                string pid = "";
                                 for (int i = 0; i < FaceRectangles.Count; i++)
-                                { g.DrawString($"{Ages[i]} 岁 | {Gender[i]}", new Font("微软雅黑", 24), Brushes.Green, new PointF(FaceRectangles[i].X + FaceRectangles[i].Width + 24, FaceRectangles[i].Y)); }
+                                {
+                                    if (Pids.Any())
+                                    { pid = $"| Pid: {Pids[i]}"; }
+                                    g.DrawString($"{Ages[i]} 岁 | {Gender[i]} {pid}", new Font("微软雅黑", 24), Brushes.Green, new PointF(FaceRectangles[i].X + FaceRectangles[i].Width + 24, FaceRectangles[i].Y));
+                                }
                             }
                         }
 
