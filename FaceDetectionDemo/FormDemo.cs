@@ -122,11 +122,18 @@ namespace FaceDetectionDemo
         /// <param name="token">取消标记</param>
         private async void StartDetector(CancellationToken token)
         {
+            List<double> fpsList = new List<double>();
+            double fps = 0;
+            Stopwatch stopwatchFPS = new Stopwatch();
             Stopwatch stopwatch = new Stopwatch();
             while (VideoPlayer.IsRunning && !token.IsCancellationRequested)
             {
                 if (CheckBoxFPS.Checked)
-                { stopwatch.Restart(); }
+                {
+                    stopwatch.Restart();
+                    if (!stopwatchFPS.IsRunning)
+                    { stopwatchFPS.Start(); }
+                }
                 Bitmap bitmap = VideoPlayer.GetCurrentVideoFrame(); // 获取摄像头画面 
                 if (bitmap != null)
                 {
@@ -169,7 +176,22 @@ namespace FaceDetectionDemo
                         if (CheckBoxFPS.Checked)
                         {
                             stopwatch.Stop();
-                            g.DrawString($"{1000f / stopwatch.ElapsedMilliseconds:#.#} FPS", new Font("微软雅黑", 24), Brushes.Green, new Point(10, 10));
+
+                            if (numericUpDownFPSTime.Value > 0)
+                            {
+                                fpsList.Add(1000f / stopwatch.ElapsedMilliseconds);
+                                if (stopwatchFPS.ElapsedMilliseconds >= numericUpDownFPSTime.Value)
+                                {
+                                    fps = fpsList.Average();
+                                    fpsList.Clear();
+                                    stopwatchFPS.Reset();
+                                }
+                            }
+                            else
+                            {
+                                fps = 1000f / stopwatch.ElapsedMilliseconds;
+                            }
+                            g.DrawString($"{fps:#.#} FPS", new Font("微软雅黑", 24), Brushes.Green, new Point(10, 10));
                         }
                     }
                 }

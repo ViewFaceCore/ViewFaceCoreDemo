@@ -37,7 +37,11 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.CheckBoxFPS = new System.Windows.Forms.CheckBox();
             this.CheckBoxDetect = new System.Windows.Forms.CheckBox();
+            this.numericUpDownFPSTime = new System.Windows.Forms.NumericUpDown();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.FacePictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSTime)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ButtonStart
@@ -82,47 +86,82 @@
             this.VideoPlayer.Text = "videoSourcePlayer1";
             this.VideoPlayer.VideoSource = null;
             // 
-            // checkBoxFaceProperty
+            // CheckBoxFaceProperty
             // 
             this.CheckBoxFaceProperty.AutoSize = true;
             this.CheckBoxFaceProperty.Location = new System.Drawing.Point(752, 134);
-            this.CheckBoxFaceProperty.Name = "checkBoxFaceProperty";
+            this.CheckBoxFaceProperty.Name = "CheckBoxFaceProperty";
             this.CheckBoxFaceProperty.Size = new System.Drawing.Size(119, 19);
             this.CheckBoxFaceProperty.TabIndex = 6;
             this.CheckBoxFaceProperty.Text = "检测人脸属性";
             this.toolTip1.SetToolTip(this.CheckBoxFaceProperty, "启用检测人脸属性后，图片的刷新率可能会显著下降");
             this.CheckBoxFaceProperty.UseVisualStyleBackColor = true;
             // 
-            // checkBoxFPS
+            // CheckBoxFPS
             // 
             this.CheckBoxFPS.AutoSize = true;
             this.CheckBoxFPS.Checked = true;
             this.CheckBoxFPS.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxFPS.Location = new System.Drawing.Point(752, 159);
-            this.CheckBoxFPS.Name = "checkBoxFPS";
+            this.CheckBoxFPS.Name = "CheckBoxFPS";
             this.CheckBoxFPS.Size = new System.Drawing.Size(91, 19);
             this.CheckBoxFPS.TabIndex = 7;
             this.CheckBoxFPS.Text = "计算 FPS";
             this.CheckBoxFPS.UseVisualStyleBackColor = true;
             // 
-            // checkBoxDetect
+            // CheckBoxDetect
             // 
             this.CheckBoxDetect.AutoSize = true;
             this.CheckBoxDetect.Checked = true;
             this.CheckBoxDetect.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxDetect.Location = new System.Drawing.Point(752, 109);
-            this.CheckBoxDetect.Name = "checkBoxDetect";
+            this.CheckBoxDetect.Name = "CheckBoxDetect";
             this.CheckBoxDetect.Size = new System.Drawing.Size(89, 19);
             this.CheckBoxDetect.TabIndex = 8;
             this.CheckBoxDetect.Text = "人脸检测";
             this.CheckBoxDetect.UseVisualStyleBackColor = true;
             this.CheckBoxDetect.CheckedChanged += new System.EventHandler(this.CheckBoxDetect_CheckedChanged);
             // 
+            // numericUpDownFPSTime
+            // 
+            this.numericUpDownFPSTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownFPSTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownFPSTime.Location = new System.Drawing.Point(6, 39);
+            this.numericUpDownFPSTime.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownFPSTime.Name = "numericUpDownFPSTime";
+            this.numericUpDownFPSTime.Size = new System.Drawing.Size(107, 25);
+            this.numericUpDownFPSTime.TabIndex = 9;
+            this.numericUpDownFPSTime.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.numericUpDownFPSTime);
+            this.groupBox1.Location = new System.Drawing.Point(752, 184);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(119, 70);
+            this.groupBox1.TabIndex = 11;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "FPS 刷新时间 (单位:毫秒)";
+            // 
             // FormDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(891, 442);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CheckBoxDetect);
             this.Controls.Add(this.CheckBoxFPS);
             this.Controls.Add(this.CheckBoxFaceProperty);
@@ -135,6 +174,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Closing);
             this.Load += new System.EventHandler(this.Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.FacePictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSTime)).EndInit();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -149,6 +190,8 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox CheckBoxFPS;
         private System.Windows.Forms.CheckBox CheckBoxDetect;
+        private System.Windows.Forms.NumericUpDown numericUpDownFPSTime;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 
