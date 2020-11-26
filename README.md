@@ -6,7 +6,7 @@
 
 ### 使用
 - clone 此项目，使用 `Visual Studio 2019` 打开项目，启动。
-- 下载 [Release.zip 文件](https://github.com/View12138/ViewFaceCoreDemo/releases) ，解压并运行 `FaceDetectionDemo.exe` 。
+- 下载 Release.zip 文件 [ [Github](https://github.com/View12138/ViewFaceCoreDemo/releases) | [Gitee](https://gitee.com/View12138/ViewFaceCoreDemo/releases) ]，解压并运行 `FaceDetectionDemo.exe` 。
 
 ### 效果
 ![Jay's Face](https://i.loli.net/2020/09/22/21itZhmAe53fCyR.jpg)
